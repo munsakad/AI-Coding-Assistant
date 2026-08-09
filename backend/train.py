@@ -19,8 +19,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from model.network import BugRiskNet
-from model.features import INPUT_DIM
+from model.network import BugRiskNet, INPUT_DIM
 
 SEED = 42
 N_SAMPLES = 6000
