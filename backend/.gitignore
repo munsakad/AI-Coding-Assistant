@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+!.env.example
+model/weights.pt
+.DS_Store

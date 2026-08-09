@@ -1,0 +1,22 @@
+node_modules
+
+# Secrets — never commit these (real API keys / shared secrets live here)
+.env
+.env.local
+!.env.example
+
+# Python
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+
+# Trained model artifact — regenerate locally with `python train.py`
+backend/model/weights.pt
+
+# Next.js build output
+frontend/.next/
+
+# Local dev database
+frontend/prisma/dev.db
+frontend/prisma/*.db

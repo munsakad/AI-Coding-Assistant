@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  snippets Snippet[]
+}
+
+model Snippet {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  language  String
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  analyses Analysis[]
+}
+
+model Analysis {
+  id             String   @id @default(cuid())
+  snippetId      String
+  snippet        Snippet  @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  bugs           String // JSON-encoded BugFinding[]
+  optimizations  String // JSON-encoded string[]
+  explanation    String
+  riskScore      Float
+  riskFeatures   String // JSON-encoded object
+  createdAt      DateTime @default(now())
+}
