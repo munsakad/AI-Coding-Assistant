@@ -1,0 +1,71 @@
+name: Deploy demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Train the PyTorch bug-risk model and export it for the browser
+        working-directory: backend
+        run: |
+          pip install torch==2.7.1 --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy==2.1.3
+          python train.py
+          python export_web_model.py ../frontend/public/demo
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci || npm install --no-audit --no-fund
+
+      - name: Verify the JS risk model matches PyTorch
+        working-directory: frontend
+        run: node demo/check-risk-parity.mjs public/demo
+
+      - name: Prepare static export (client pages + in-browser API)
+        working-directory: frontend
+        run: node demo/apply.mjs
+
+      - name: Build
+        working-directory: frontend
+        env:
+          PAGES_BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          rm -f public/demo/risk-parity.json
+          npx next build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
