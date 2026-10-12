@@ -58,7 +58,7 @@ async function generate(systemInstruction, prompt, generationConfig) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": key },
     body: JSON.stringify({
-      systemInstruction: { parts: [{ text: systemInstruction }] },
+      ...(systemInstruction ? { systemInstruction: { parts: [{ text: systemInstruction }] } } : {}),
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig,
     }),
