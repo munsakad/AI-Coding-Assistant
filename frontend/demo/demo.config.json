@@ -1,0 +1,17 @@
+{
+  "move": {
+    "app/snippets/[id]/SnippetDetail.tsx": "app/snippets/view/SnippetDetail.tsx"
+  },
+  "remove": [
+    "app/api",
+    "middleware.ts",
+    "app/snippets/[id]"
+  ],
+  "patch": [
+    {
+      "file": "app/workspace/Workspace.tsx",
+      "find": "router.push(`/snippets/${body.id}`)",
+      "replace": "router.push(`/snippets/view?id=${body.id}`)"
+    }
+  ]
+}
