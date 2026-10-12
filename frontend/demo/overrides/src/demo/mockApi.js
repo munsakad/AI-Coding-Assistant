@@ -294,18 +294,23 @@ async function handle(path, init) {
 }
 
 let installed = false;
+// Called at module load (before next-auth fetches the session); no DOM changes here
 export function installDemo() {
   if (installed) return;
   installed = true;
   installFetch(handle);
-  const mount = () =>
-    mountDemoPanel({
-      repoUrl: REPO_URL,
-      note:
-        "Static build: the Next.js API routes and the FastAPI service run in your browser. Sign in with " +
-        "<b>sam@codementor.dev / Student123!</b> or create an account (stored only in this browser).",
-      offlineNote: "Without a key, Analyze still shows the PyTorch risk score, computed in your browser.",
-    });
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
-  else mount();
+}
+
+let panelMounted = false;
+// Called from an effect, after hydration, so React never sees the extra node
+export function mountPanel() {
+  if (panelMounted) return;
+  panelMounted = true;
+  mountDemoPanel({
+    repoUrl: REPO_URL,
+    note:
+      "Static build: the Next.js API routes and the FastAPI service run in your browser. Sign in with " +
+      "<b>sam@codementor.dev / Student123!</b> or create an account (stored only in this browser).",
+    offlineNote: "Without a key, Analyze still shows the PyTorch risk score, computed in your browser.",
+  });
 }
