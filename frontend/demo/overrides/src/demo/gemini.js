@@ -4,7 +4,7 @@
 // Generative Language API. Mirrors the backend's generate_json/generate_text.
 
 const KEY_STORAGE = "demo.geminiApiKey";
-export const GEMINI_MODEL = "gemini-3.8-flash"; // same model as backend/gemini_service.py
+export const GEMINI_MODEL = "gemini-3.5-flash-lite"; // same model as backend/gemini_service.py
 const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/";
 
 // captured before any demo fetch interception is installed (guarded for

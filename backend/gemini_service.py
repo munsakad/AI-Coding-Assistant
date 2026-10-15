@@ -20,7 +20,7 @@ def _get_model(response_schema: dict):
         raise GenerationError("GEMINI_API_KEY is not set on the backend")
     genai.configure(api_key=api_key)
     return genai.GenerativeModel(
-        "gemini-3.8-flash",
+        "gemini-3.5-flash-lite",
         generation_config={
             "response_mime_type": "application/json",
             "response_schema": response_schema,
